@@ -1,0 +1,73 @@
+---
+title: "tarea 2.4"
+author: "Randall Smith Cabezas"
+format: html
+---
+
+
+
+```{r}
+#| echo: false
+#| label: 
+#| warning: false
+#| message: false
+
+
+
+
+library(tidyverse)
+library(DT)
+library(scales)
+
+# Carga de ggthemes
+library(ggthemes)
+
+# Carga de hbrtheme
+# Carga de hbrthemes
+library(hrbrthemes)
+library(plotly)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| label: carga-datos
+#| warning: false
+#| message: false
+
+paises <- read_csv("paises.csv")
+```
+
+
+```{r}
+#| echo: false
+#| warning: false
+# Gráfico de dispersión de PIB per cápita vs esperanza de vida al nacer
+grafico_ggplot2 <-
+  paises |>
+  ggplot(aes(x = GDP_PC, y = LIFE_EXPECTANCY, color = CONTINENT)) +
+  geom_point(aes(
+    # datos que se muestran al colocar el ratón sobre un punto
+    text = paste0(
+      "PIB per cápita: ", GDP_PC, "\n",
+      "Esperanza de vida: ", LIFE_EXPECTANCY
+    )
+  )) +
+  scale_x_continuous(labels = comma, limits = c(0, NA)) +
+  scale_y_continuous(labels = comma, limits = c(50, 90)) +
+  ggtitle("PIB per cápita vs esperanza de vida al nacer por continente") +
+  xlab("PIB per cápita  (USD)") +
+  ylab("Esperanza de vida (años)") +
+  labs(caption = "Fuentes: Natural Earth y Banco Mundial",
+       color = "Continente") +
+  labs(color = "Población estimada") +
+  theme_ipsum() # estilo de hrbrthemes
+
+# Gráfico plotly
+ggplotly(grafico_ggplot2, tooltip = "text") |> 
+  config(locale = 'es') # para mostrar los controles en español
+
+```
+
